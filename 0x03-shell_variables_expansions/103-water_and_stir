@@ -1,2 +1,31 @@
 #!/bin/bash
-echo $(($WATER + $STIR)) | tr '012345678' 'bestchol'
+
+# Define character sets
+w_base="water"
+s_base="stir"
+b_base="bestchol"
+
+# Remove invalid characters and map to digits (only characters in base allowed)
+clean_water=$(echo "$WATER" | tr -cd "$w_base" | tr "$w_base" 01234)
+clean_stir=$(echo "$STIR" | tr -cd "$s_base" | tr "$s_base" 01234)
+
+# Convert to decimal
+w_value=$((5#$clean_water))
+s_value=$((5#$clean_stir))
+
+# Add the two values
+sum=$((w_value + s_value))
+
+# Convert to base bestchol
+digits="bestchol"
+result=""
+while [ "$sum" -gt 0 ]; do
+    index=$((sum % 9))
+    result="${digits:$index:1}$result"
+    sum=$((sum / 9))
+done
+
+# If result is empty (sum = 0), set to first digit
+[ -z "$result" ] && result="${digits:0:1}"
+
+echo "$result"

@@ -1,2 +1,92 @@
 #!/bin/bash
-echo $(($WATER + $STIR)) | tr '012345678' 'bestchol'
+# Script to add WATER (base water) and STIR (base stir) and output in base bestchol
+
+# Function to convert base water to decimal
+water_to_decimal() {
+    local input=$1
+    local decimal=0
+    local pos=0
+    local char
+    # Map: w=0, a=1, t=2, e=3, r=4
+    for ((i=${#input}-1; i>=0; i--)); do
+        char=${input:$i:1}
+        case $char in
+            w) digit=0 ;;
+            a) digit=1 ;;
+            t) digit=2 ;;
+            e) digit=3 ;;
+            r) digit=4 ;;
+            *) continue ;;
+        esac
+        decimal=$((decimal + digit * 5**pos))
+        pos=$((pos + 1))
+    done
+    echo $decimal
+}
+
+# Function to convert base stir to decimal
+stir_to_decimal() {
+    local input=$1
+    local decimal=0
+    local pos=0
+    local char
+    # Map: s=0, t=1, i=2, r=3
+    for ((i=${#input}-1; i>=0; i--)); do
+        char=${input:$i:1}
+        case $char in
+            s) digit=0 ;;
+            t) digit=1 ;;
+            i) digit=2 ;;
+            r) digit=3 ;;
+            .) continue ;; # Ignore dots
+            *) continue ;;
+        esac
+        decimal=$((decimal + digit * 4**pos))
+        pos=$((pos + 1))
+    done
+    echo $decimal
+}
+
+# Function to convert decimal to base bestchol
+decimal_to_bestchol() {
+    local input=$1
+    local output=""
+    local digit
+    # Map: b=0, e=1, s=2, t=3, c=4, h=5, o=6, l=7
+    while [ $input -gt 0 ]; do
+        digit=$((input % 8))
+        case $digit in
+            0) char='b' ;;
+            1) char='e' ;;
+            2) char='s' ;;
+            3) char='t' ;;
+            4) char='c' ;;
+            5) char='h' ;;
+            6) char='o' ;;
+            7) char='l' ;;
+        esac
+        output="$char$output"
+        input=$((input / 8))
+    done
+    [ -z "$output" ] && output="b" # Handle zero case
+    echo "$output"
+}
+
+# Main logic
+if [ -z "$WATER" ] || [ -z "$STIR" ]; then
+    echo "Environment variables WATER and STIR must be set"
+    exit 1
+fi
+
+# Convert inputs to decimal
+water_dec=$(water_to_decimal "$WATER")
+stir_dec=$(stir_to_decimal "$STIR")
+
+# Add the numbers
+sum=$((water_dec + stir_dec))
+
+# Convert sum to base bestchol
+result=$(decimal_to_bestchol "$sum")
+
+# Print result
+echo "$result"

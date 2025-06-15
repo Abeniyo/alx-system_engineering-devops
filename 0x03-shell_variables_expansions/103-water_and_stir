@@ -1,2 +1,37 @@
 #!/bin/bash
-echo $(($WATER + $STIR)) | tr '012345678' 'bestchol'
+
+
+water_digits="water"
+water_value=0
+for (( i=0; i<${#WATER}; i++ )); do
+    char="${WATER:$i:1}"
+    digit=$(expr index "$water_digits" "$char" - 1)
+    water_value=$(( water_value * 8 + digit ))
+done
+
+
+stir_digits="stir"
+stir_value=0
+for (( i=0; i<${#STIR}; i++ )); do
+    char="${STIR:$i:1}"
+    digit=$(expr index "$stir_digits" "$char" - 1)
+    stir_value=$(( stir_value * 9 + digit ))
+done
+
+
+sum=$(( water_value + stir_value ))
+
+
+bestchol_digits="bestchol"
+result=""
+while [ $sum -gt 0 ]; do
+    remainder=$(( sum % 9 ))
+    result="${bestchol_digits:$remainder:1}$result"
+    sum=$(( sum / 9 ))
+done
+
+
+[ -z "$result" ] && result="${bestchol_digits:0:1}"
+
+
+echo "$result"

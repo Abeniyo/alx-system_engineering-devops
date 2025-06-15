@@ -1,2 +1,49 @@
 #!/bin/bash
-echo $(($WATER + $STIR)) | tr '012345678' 'bestchol'
+
+# Define bases as strings
+water_base="ewatr"
+stir_base="ti.r"
+bestchol_base="bestchol"
+
+# Function to convert from custom base to decimal
+convert_to_decimal() {
+  local input="$1"
+  local base_chars="$2"
+  local base=${#base_chars}
+  local result=0
+  local digit
+  local i
+
+  for ((i=0; i<${#input}; i++)); do
+    digit="${input:$i:1}"
+    value=$(expr index "$base_chars" "$digit" - 1)
+    result=$((result * base + value))
+  done
+  echo "$result"
+}
+
+# Function to convert from decimal to custom base
+convert_from_decimal() {
+  local num=$1
+  local base_chars="$2"
+  local base=${#base_chars}
+  local result=""
+  local remainder
+
+  while [ "$num" -gt 0 ]; do
+    remainder=$((num % base))
+    result="${base_chars:$remainder:1}$result"
+    num=$((num / base))
+  done
+  echo "$result"
+}
+
+# Convert WATER and STIR to base 10
+decimal_water=$(convert_to_decimal "$WATER" "$water_base")
+decimal_stir=$(convert_to_decimal "$STIR" "$stir_base")
+
+# Add the two numbers
+sum=$((decimal_water + decimal_stir))
+
+# Convert the sum to base bestchol and print
+convert_from_decimal "$sum" "$bestchol_base"

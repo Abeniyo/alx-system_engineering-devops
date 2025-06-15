@@ -1,6 +1,2 @@
 #!/bin/bash
-
-water_num=$((5#$(echo "$WATER" | tr 'water' '01234')))
-stir_num=$((5#$(echo "$STIR" | tr 'stir.' '01234')))
-sum=$((water_num + stir_num))
-printf '%o\n' "$sum" | tr '01234567' 'bestchol'
+echo $(($WATER + $STIR)) | tr '012345678' 'bestchol'

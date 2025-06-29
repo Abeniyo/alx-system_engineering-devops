@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
-# Connects to the server using a private key
-ssh -i ~/.ssh/school -o StrictHostKeyChecking=no ubuntu@54.209.68.29
+# Connects to a server using the private SSH key ~/.ssh/school with user ubuntu
+
+ssh -i ~/.ssh/school ubuntu@54.209.68.29
 

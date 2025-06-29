@@ -1,0 +1,6 @@
+Host 991792-web-01
+  HostName 54.209.68.29
+  User ubuntu
+  IdentityFile ~/.ssh/school
+  IdentitiesOnly yes
+  PasswordAuthentication no

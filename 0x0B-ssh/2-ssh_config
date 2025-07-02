@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 Host 991792-web-01
   HostName 54.209.68.29
   User ubuntu

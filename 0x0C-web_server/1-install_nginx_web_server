@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Installs Nginx and configures it to return Hello World on root request
+
+# Install nginx if not already installed
+apt-get update -y
+apt-get install nginx -y
+
+# Replace default index.html with Hello World
+echo "Hello World!" > /var/www/html/index.html
+
+# Ensure nginx is started using service (not systemctl)
+service nginx start || service nginx restart
